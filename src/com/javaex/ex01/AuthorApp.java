@@ -3,7 +3,6 @@ package com.javaex.ex01;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class AuthorApp {
@@ -20,10 +19,10 @@ public class AuthorApp {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
 			// 2. Connection 얻어오기
 			String url = "jdbc:oracle:thin:@localhost:1521:xe";
-			conn = DriverManager.getConnection(url, "webdb", "webdb");
+			conn = DriverManager.getConnection(url, "webdb", "1234");
 			// 3. SQL문 준비 / 바인딩 / 실행
 			String query = ""; // 쿼리문 문자열로 만들기--> ? 주의
-			query += " insert into author ";
+			query += " insert into authors ";
 			query += " values(seq_author_id.nextval,?,?) ";
 			
 			pstmt = conn.prepareStatement(query); // 문자열-> 쿼리문

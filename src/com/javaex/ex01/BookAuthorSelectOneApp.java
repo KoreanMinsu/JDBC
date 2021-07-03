@@ -6,18 +6,20 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class BookAuthorSelectApp {
+public class BookAuthorSelectOneApp {
 	public static void main(String[] args) {
-		
-		Connection conn=null;
+	
+		Connection conn = null;
 		PreparedStatement ps = null;
 		ResultSet rs = null;
 		
+		
 		try {
 			Class.forName("oracle.jdbc.driver.OracleDriver");
+		
 			
-			String url ="jdbc:oracle:thin:@localhost:1521:xe";
-			conn=DriverManager.getConnection(url, "webdb","1234");
+			String url="jdbc:oracle:thin:@localhost:1521:xe";
+			conn=DriverManager.getConnection(url, "webdb", "1234");
 			
 			String query="";
 			query += " select b.book_id, ";
@@ -27,10 +29,13 @@ public class BookAuthorSelectApp {
 			query += " 			b.author_id, ";
 			query += "			au.author_name, ";
 			query += "			au.author_desc ";
-			query += " from books b, authors au ";
+			query += " from books b, authors au, ";
 			query += " where b.author_id=au.author_id ";
+			query += " and book_id = ? ";
+
 			
 			ps =conn.prepareStatement(query);
+			ps.setInt(1, 5);
 			rs = ps.executeQuery();
 			
 			while(rs.next()) {
@@ -45,26 +50,10 @@ public class BookAuthorSelectApp {
 		    	System.out.println(bookId+ ", " + title + ", " + pubs + ", " + pubDate + ", " + authorId + ", " + authorName + ", " + authorDesc);
 			}
 			
-		}catch(ClassNotFoundException e) {
-			System.out.println("driver not loaded : "+e);
+		} catch(ClassNotFoundException e) {
+			System.out.println("driver is not loaded:"+ e);
 		}catch(SQLException e) {
 			System.out.println("error:"+e);
-		}finally {
-			
-			try {
-				if(rs!=null) {
-					rs.close();
-				}
-				if(ps!=null) {
-					ps.close();
-				}
-				if(conn!=null) {
-					conn.close();
-				}
-			}catch(SQLException e) {
-				System.out.println("error"+e);
-			}
 		}
-		
 	}
 }

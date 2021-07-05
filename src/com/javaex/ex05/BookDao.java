@@ -138,13 +138,13 @@ public class BookDao {
 
 		try {
 			String query = "";
-			query = " select b.book_id, ";
-			query = " 		   b.title, ";
-			query = "          b.pubs, ";
-			query = "          b.pub_date; ";
-			query = "          au.author_id ";
-			query = " from books b, authors au ";
-			query = " where b.author_id = au.author_id ";
+			query += " select b.book_id, ";
+			query += " 		   b.title, ";
+			query += "          b.pubs, ";
+			query += "          b.pub_date; ";
+			query += "          au.author_id ";
+			query += " from books b, authors au ";
+			query += " where b.author_id = au.author_id ";
 
 			ps = conn.prepareStatement(query);
 
@@ -167,6 +167,48 @@ public class BookDao {
 		}
 		this.close();
 
+		return bookList;
+	}
+	
+	//select BookList
+	public List<BookVo> getBookList(String search){
+		List<BookVo> bookList = new ArrayList<BookVo>();
+		
+		this.getConnection();
+		try {
+			String query = "";
+			query += " select b.book_id, ";
+			query += " 		   b.title, ";
+			query += "          b.pubs, ";
+			query += "          b.pub_date; ";
+			query += "          au.author_id ";
+			query += " from books b, authors au ";
+			query += " where b.author_id = au.author_id ";
+			query += " or b.book_id like '%" + search + "%' ";
+			query += " or b.book_id like '%" + search + "%' ";
+			query += " or b.book_id like '%" + search + "%' ";
+			
+			ps = conn.prepareStatement(query);
+			
+			rs= ps.executeQuery();
+			
+			while(rs.next()) {
+				int bookId = rs.getInt("b.bookId");
+				String bookTitle = rs.getString("b.bookTitle");
+				String bookPubs = rs.getString("b.bookPubs");
+				String bookPubDate = rs.getString("b.bookPubDate");
+				int authorId = rs.getInt("au.authorId");
+
+				BookVo bookVo = new BookVo(bookId, bookTitle, bookPubs, bookPubDate, authorId);
+
+				bookList.add(bookVo);
+			}
+			
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		this.close();
 		return bookList;
 	}
 
